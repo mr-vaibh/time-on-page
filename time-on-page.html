@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TOP</title>
+
+    <style>
+      body { text-align: center; }
+
+      h1, h3 { font-family: Arial; }
+
+      mark { font-size: large; }
+    </style>
+</head>
+
+<body>
+
+  <h1>Time on Page</h1>
+  <h3>This code example can be used to determine the amount of time (in seconds) user spent on the page, before he closes it.</h3>
+
+  <p>We've created an dummy API: <code><a href="https://topapi.free.beeceptor.com">https://topapi.free.beeceptor.com</a></code> to send post request</p>
+  <p>You can verify if the requests are being made here: <code><a href="https://beeceptor.com/console/topapi">https://beeceptor.com/console/topapi</a></code></p>
+
+  <mark>The JavaScript API/feature which is used here is - <a href="https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API">Beacon API</a>, which helps to send AJAX requests even after the page is unloaded</mark>
+
+
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+  <script type="text/javascript">
+    // This code is Vanilla JS, you can equivalently use jQuery
+    // $(document).ready() or $(window).on()
+
+    let timeSpentScrolling = 0;
+
+    let isHalted = false;
+    let haltedStartTime, haltedEndTime;
+    let totalHaltedTime = 0;
+
+    // Listen for scroll events
+    window.addEventListener('scroll', () => {
+      timeSpentScrolling += 1.8;
+
+      if (isHalted) {
+        isHalted = false;
+        haltedEndTime = new Date().getTime()
+        totalHaltedTime += (haltedEndTime - haltedStartTime) / 1000
+        console.log(totalHaltedTime)
+      }
+    });
+
+    // AVERAGE SCROLLING INTERVAL - 39 seconds
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const start = new Date().getTime();
+
+      setInterval(() => {
+        if (new Date().getTime() - start > 39000) {
+          if (!isHalted) {
+            isHalted = true;
+            haltedStartTime = new Date().getTime()
+          }
+        }
+      }, 39000)
+
+      window.addEventListener("beforeunload", () => {
+        const end = new Date().getTime();
+        const totalTime = ((end - start) / 1000) - (timeSpentScrolling / 1000) - totalHaltedTime
+        navigator.sendBeacon("https://topapi2.free.beeceptor.com", totalTime)
+      });
+
+    });
+
+  </script>
+</body>
+</html>
